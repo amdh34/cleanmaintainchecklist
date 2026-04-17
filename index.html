@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Cleaning Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7F2;
+    --cream2: #F3EDE3;
+    --cream3: #EAE1D3;
+    --sage: #5A7A58;
+    --sage-light: #EBF1EB;
+    --sage-mid: #8AAD88;
+    --brown: #3D2E1E;
+    --brown-mid: #7A6252;
+    --brown-light: #C4B5A5;
+    --amber: #C17F3A;
+    --amber-light: #FDF0E0;
+    --red-light: #FDECEA;
+    --red: #B84040;
+    --text: #2E2318;
+    --text-mid: #6B5A4A;
+    --text-light: #A08E7E;
+    --border: #DDD4C8;
+    --border-light: #EDE6DC;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--brown);
+    padding: 2.5rem 1.5rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(255,255,255,0.025) 40px,
+      rgba(255,255,255,0.025) 41px
+    );
+  }
+  header h1 {
+    font-family: 'Lora', serif;
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    color: var(--cream);
+    font-weight: 400;
+    position: relative;
+  }
+  header h1 em {
+    font-style: italic;
+    color: var(--sage-mid);
+  }
+  header p {
+    color: var(--brown-light);
+    font-size: 13px;
+    font-weight: 300;
+    margin-top: 0.4rem;
+    position: relative;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── TABS ── */
+  .tab-bar {
+    background: var(--brown);
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .tab-btn {
+    font-family: 'DM Sans', sans-serif;
+    background: none;
+    border: none;
+    color: var(--brown-light);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tab-btn:hover { color: var(--cream); }
+  .tab-btn.active {
+    color: var(--cream);
+    border-bottom-color: var(--sage-mid);
+    font-weight: 500;
+  }
+
+  /* ── MAIN CONTENT ── */
+  main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 4rem;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    gap: 12px;
+  }
+  .progress-label {
+    font-size: 13px;
+    color: var(--text-mid);
+    white-space: nowrap;
+  }
+  .progress-track {
+    flex: 1;
+    height: 5px;
+    background: var(--cream3);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--sage);
+    border-radius: 99px;
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+  .clear-btn {
+    font-family: 'DM Sans', sans-serif;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-light);
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 99px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .clear-btn:hover {
+    background: var(--red-light);
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 1.75rem; }
+  .section-title {
+    font-family: 'Lora', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--brown-mid);
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .section-title .icon {
+    font-size: 14px;
+    opacity: 0.8;
+  }
+
+  /* ── TASK ITEM ── */
+  .task {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 9px 0 8px;
+    border-bottom: 1px solid var(--border-light);
+    transition: background 0.1s;
+  }
+  .task:last-child { border-bottom: none; }
+
+  .task input[type=checkbox] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    margin-top: 1px;
+    cursor: pointer;
+    background: white;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .task input[type=checkbox]:hover {
+    border-color: var(--sage-mid);
+  }
+  .task input[type=checkbox]:checked {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+  .task input[type=checkbox]:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 6px;
+    height: 10px;
+    border: 2px solid white;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+  }
+
+  .task label {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text);
+    cursor: pointer;
+    transition: color 0.15s;
+    flex: 1;
+  }
+  .task.done label {
+    color: var(--text-light);
+    text-decoration: line-through;
+    text-decoration-color: var(--brown-light);
+  }
+
+  .warn {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    background: var(--amber-light);
+    color: var(--amber);
+    padding: 1px 7px;
+    border-radius: 99px;
+    margin-left: 4px;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  /* ── SEASON DIVIDER ── */
+  .season-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 2rem 0 1rem;
+  }
+  .season-header:first-child { margin-top: 0.5rem; }
+  .season-pill {
+    font-family: 'Lora', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: white;
+    background: var(--sage);
+    padding: 4px 14px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .season-line { flex: 1; height: 1px; background: var(--border); }
+
+  /* ── INTRO CARD ── */
+  .intro-card {
+    background: var(--sage-light);
+    border: 1px solid #C8D9C7;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 1.5rem;
+    font-size: 13px;
+    color: var(--sage);
+    line-height: 1.6;
+  }
+  .intro-card strong { font-weight: 500; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 12px;
+    color: var(--text-light);
+    border-top: 1px solid var(--border-light);
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    .tab-bar, .clear-btn, .progress-row { display: none !important; }
+    .tab-panel { display: block !important; page-break-after: always; }
+    body { background: white; }
+    header { background: #333 !important; -webkit-print-color-adjust: exact; }
+  }
+
+  @media (max-width: 420px) {
+    .tab-btn { padding: 12px 12px; font-size: 11px; letter-spacing: 0.05em; }
+    header { padding: 2rem 1rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Home <em>Cleaning</em> Checklist</h1>
+  <p>Orem, UT &nbsp;·&nbsp; 7 people &nbsp;·&nbsp; 2 cats &amp; 1 dog</p>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('daily')">Daily</button>
+  <button class="tab-btn" onclick="switchTab('weekly')">Weekly</button>
+  <button class="tab-btn" onclick="switchTab('monthly')">Monthly</button>
+  <button class="tab-btn" onclick="switchTab('seasonal')">Seasonal</button>
+</div>
+
+<main>
+
+<!-- DAILY -->
+<div class="tab-panel active" id="panel-daily">
+  <div class="intro-card">These are the everyday tasks that keep a household of 7 running smoothly. With three pets, <strong>scooping litter daily</strong> and sweeping high-traffic floors make the biggest difference.</div>
+  <div class="progress-row">
+    <span class="progress-label" id="prog-daily">0 of 0 done</span>
+    <div class="progress-track"><div class="progress-fill" id="fill-daily" style="width:0%"></div></div>
+    <button class="clear-btn" onclick="clearTab('daily')">Reset</button>
+  </div>
+</div>
+
+<!-- WEEKLY -->
+<div class="tab-panel" id="panel-weekly">
+  <div class="intro-card">Weekly tasks keep every room truly clean, not just surface-level. With <strong>mostly hard floors</strong>, sweeping and mopping are your bread and butter — plan a block of time for the full floor sweep.</div>
+  <div class="progress-row">
+    <span class="progress-label" id="prog-weekly">0 of 0 done</span>
+    <div class="progress-track"><div class="progress-fill" id="fill-weekly" style="width:0%"></div></div>
+    <button class="clear-btn" onclick="clearTab('weekly')">Reset</button>
+  </div>
+</div>
+
+<!-- MONTHLY -->
+<div class="tab-panel" id="panel-monthly">
+  <div class="intro-card">Utah has <strong>very hard water</strong> — descaling faucets and showerheads monthly is essential. With 3 pets, change your HVAC filter every 4–6 weeks rather than the standard 3 months.</div>
+  <div class="progress-row">
+    <span class="progress-label" id="prog-monthly">0 of 0 done</span>
+    <div class="progress-track"><div class="progress-fill" id="fill-monthly" style="width:0%"></div></div>
+    <button class="clear-btn" onclick="clearTab('monthly')">Reset</button>
+  </div>
+</div>
+
+<!-- SEASONAL -->
+<div class="tab-panel" id="panel-seasonal">
+  <div class="intro-card">Seasonal tasks keep your home in top shape year-round. Top priority: <strong>fix the sprinkler system in spring</strong> before Utah's hot summer, and <strong>service the furnace every fall</strong> before the cold hits.</div>
+  <div class="progress-row">
+    <span class="progress-label" id="prog-seasonal">0 of 0 done</span>
+    <div class="progress-track"><div class="progress-fill" id="fill-seasonal" style="width:0%"></div></div>
+    <button class="clear-btn" onclick="clearTab('seasonal')">Reset</button>
+  </div>
+</div>
+
+</main>
+
+<footer>Your progress saves automatically in your browser. &nbsp;|&nbsp; Made for your Orem home.</footer>
+
+<script>
+const TASKS = {
+  daily: [
+    { s: "Kitchen", icon: "🍳", items: [
+      "Wash dishes or run the dishwasher",
+      "Wipe counters and backsplash",
+      "Wipe stovetop after cooking",
+      "Sweep kitchen floor",
+      "Wipe dining table after meals",
+      "Empty trash if full"
+    ]},
+    { s: "Bathrooms", icon: "🚿", items: [
+      "Wipe bathroom sinks",
+      "Quick wipe of toilet seats"
+    ]},
+    { s: "Pet care", icon: "🐾", items: [
+      "Scoop cat litter box||⚠ both cats, daily minimum",
+      "Refresh cat food and water bowls",
+      "Feed and water dog"
+    ]},
+    { s: "General", icon: "🏠", items: [
+      "Pick up and tidy common areas",
+      "Sweep high-traffic hallway floors",
+      "Run at least one load of laundry"
+    ]}
+  ],
+  weekly: [
+    { s: "All floors", icon: "🧹", items: [
+      "Sweep and mop all hard floors — upstairs",
+      "Sweep and mop all hard floors — downstairs",
+      "Vacuum any area rugs",
+      "Sweep and wipe staircase treads and banister"
+    ]},
+    { s: "Kitchen", icon: "🍳", items: [
+      "Clean inside microwave",
+      "Wipe appliance exteriors (fridge, oven, dishwasher)",
+      "Deep-clean stovetop burners",
+      "Wipe cabinet fronts near stove",
+      "Empty, wipe, and reline all trash cans"
+    ]},
+    { s: "Upstairs bathroom", icon: "🚿", items: [
+      "Scrub toilet — bowl, seat, base, and tank exterior",
+      "Scrub sink and polish faucet",
+      "Clean mirror",
+      "Scrub shower or tub",
+      "Mop and disinfect floor",
+      "Replace hand and bath towels"
+    ]},
+    { s: "Downstairs bathroom", icon: "🚿", items: [
+      "Scrub toilet",
+      "Scrub sink and polish faucet",
+      "Clean mirror",
+      "Mop floor — especially around litter box area",
+      "Wipe cat food and water station area"
+    ]},
+    { s: "Bedrooms", icon: "🛏", items: [
+      "Change bed sheets — master bedroom",
+      "Change bed sheets — girl's bedroom",
+      "Change bed sheets — boy's bedroom",
+      "Dust bedroom surfaces",
+      "Sweep or mop under beds"
+    ]},
+    { s: "Living room & den", icon: "🛋", items: [
+      "Dust all surfaces",
+      "Wipe TV screen and electronics",
+      "Vacuum or wipe sofa and cushions",
+      "Fluff and rotate cushions"
+    ]},
+    { s: "Office / music room", icon: "🎵", items: [
+      "Dust desk, shelves, and electronics",
+      "Sweep or mop floor"
+    ]},
+    { s: "Blinds (all rooms)", icon: "🪟", items: [
+      "Dust all blinds throughout the house"
+    ]},
+    { s: "Pet care", icon: "🐾", items: [
+      "Full litter box dump, scrub box, and refill with fresh litter",
+      "Wash dog and cat food and water bowls",
+      "Brush dog to reduce shedding on floors"
+    ]},
+    { s: "Hallways & closets", icon: "🚪", items: [
+      "Sweep both hallways",
+      "Quick tidy of hallway closet"
+    ]},
+    { s: "Laundry room", icon: "👕", items: [
+      "Clean dryer lint trap",
+      "Wipe down washer and dryer exteriors",
+      "Tidy laundry room floor"
+    ]}
+  ],
+  monthly: [
+    { s: "Kitchen deep clean", icon: "🍳", items: [
+      "Clean inside oven",
+      "Wipe down refrigerator interior — shelves and drawers",
+      "Clean and degrease range hood filter",
+      "Run dishwasher cleaning cycle",
+      "Descale kitchen faucet aerator||⚠ Utah hard water",
+      "Wipe inside of frequently-used cabinets and pantry"
+    ]},
+    { s: "Bathroom deep clean", icon: "🚿", items: [
+      "Scrub tile grout in both bathrooms",
+      "Clean bathroom exhaust fans — dust blades and cover",
+      "Descale showerhead(s) — soak in white vinegar||⚠ Utah hard water",
+      "Inspect tub and shower caulking for cracks or mold"
+    ]},
+    { s: "All rooms", icon: "✨", items: [
+      "Dust ceiling fans and light fixtures throughout house",
+      "Wipe all baseboards",
+      "Wipe light switches, outlet covers, and door handles",
+      "Wipe all window sills",
+      "Vacuum all upholstered furniture",
+      "Clean all mirrors throughout the house"
+    ]},
+    { s: "HVAC", icon: "💨", items: [
+      "Replace furnace / AC air filter||⚠ every 4–6 weeks with 3 pets"
+    ]},
+    { s: "Laundry & utility", icon: "👕", items: [
+      "Run washing machine cleaning cycle",
+      "Clear out lint trap duct — pull out and check depth with a brush"
+    ]},
+    { s: "Pet care", icon: "🐾", items: [
+      "Wash dog bed and any cat bedding",
+      "Deep-clean litter box zone in downstairs bathroom"
+    ]},
+    { s: "Outdoor", icon: "🌿", items: [
+      "Water lawn and yard plants by hand||⚠ sprinkler needs repair",
+      "Sweep carport and front walkways",
+      "Quick tidy of carport shed and backyard shed"
+    ]},
+    { s: "Storage room", icon: "📦", items: [
+      "Walk through storage room — tidy and check for pests or moisture"
+    ]}
+  ],
+  seasonal: null
+};
+
+const SEASONAL_SECTIONS = [
+  { season: "Spring (March – April)", sections: [
+    { s: "Yard & outdoors", icon: "🌸", items: [
+      "Service AC unit before summer",
+      "Fix or service automatic sprinkler system||⚠ currently broken — priority!",
+      "Aerate and fertilize lawn",
+      "Prune shrubs, trees, and perennials",
+      "Plant seasonal flowers or garden beds",
+      "Power wash carport floor, front walkway, and patio",
+      "Check weatherstripping on all exterior doors and windows"
+    ]},
+    { s: "Deep cleaning", icon: "✨", items: [
+      "Remove and deep-soak all window blinds in bathtub",
+      "Wash all windows inside and out",
+      "Deep-clean and reorganize both sheds",
+      "Flip or rotate all mattresses",
+      "Inspect roof and gutters — clear winter debris"
+    ]}
+  ]},
+  { season: "Summer (June – July)", sections: [
+    { s: "Outdoor maintenance", icon: "☀️", items: [
+      "Water lawn by hand on consistent schedule (until sprinkler is fixed)",
+      "Confirm AC is running efficiently",
+      "Treat for ants and spiders — common in Utah summers",
+      "Wipe down carport, patio, and backyard shed surfaces",
+      "Organize storage room and downstairs areas"
+    ]}
+  ]},
+  { season: "Fall (September – October)", sections: [
+    { s: "Winterizing", icon: "🍂", items: [
+      "Service furnace before winter",
+      "Winterize outdoor hose bibs — drain and shut off water",
+      "Shut off and blow out sprinkler system before first freeze",
+      "Clean gutters before leaves fall and freeze",
+      "Check insulation around windows and doors — recaulk if needed"
+    ]},
+    { s: "Lawn & yard", icon: "🌿", items: [
+      "Overseed and fertilize lawn — best time of year for Utah",
+      "Rake yard and cut back perennials"
+    ]},
+    { s: "Appliances & safety", icon: "🔧", items: [
+      "Deep-clean all rugs and area rugs",
+      "Vacuum refrigerator coils — under or behind fridge",
+      "Flush water heater to clear sediment buildup",
+      "Clean dryer exhaust vent duct fully||⚠ fire hazard — do annually"
+    ]}
+  ]},
+  { season: "Winter / Annual (anytime)", sections: [
+    { s: "Safety & systems", icon: "🔒", items: [
+      "Test smoke detectors and CO detectors — replace batteries",
+      "Check and inspect fire extinguisher(s)"
+    ]},
+    { s: "Deep cleaning", icon: "✨", items: [
+      "Deep-clean inside of all kitchen cabinets",
+      "Wash or dry-clean all pillows and comforters",
+      "Clean behind and under all major appliances",
+      "Deep-clean tile grout throughout house",
+      "Wipe all walls and ceilings for scuffs and smudges",
+      "Touch up paint on walls and trim",
+      "Organize and purge storage room",
+      "Full deep-clean and organize both sheds"
+    ]},
+    { s: "Pest & inspection", icon: "🔍", items: [
+      "Annual pest control inspection inside and out"
+    ]}
+  ]}
+];
+
+function taskId(tab, si, ii) { return `${tab}__${si}__${ii}`; }
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem('hcc_v2') || '{}'); }
+  catch(e) { return {}; }
+}
+function saveState(state) {
+  try { localStorage.setItem('hcc_v2', JSON.stringify(state)); } catch(e) {}
+}
+
+let state = loadState();
+let activeTab = 'daily';
+
+function buildPanel(tab) {
+  const panel = document.getElementById('panel-' + tab);
+  const intro = panel.querySelector('.intro-card');
+  const prog = panel.querySelector('.progress-row');
+
+  if (tab === 'seasonal') {
+    buildSeasonalPanel(panel, intro, prog);
+    return;
+  }
+
+  TASKS[tab].forEach((sec, si) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.innerHTML = `<div class="section-title"><span class="icon">${sec.icon}</span>${sec.s}</div>`;
+    sec.items.forEach((raw, ii) => {
+      const [text, warnText] = raw.split('||');
+      const id = taskId(tab, si, ii);
+      const done = state[id] ? ' done' : '';
+      const warn = warnText ? `<span class="warn">${warnText.replace('⚠ ','')}</span>` : '';
+      const item = document.createElement('div');
+      item.className = 'task' + done;
+      item.id = 'ti-' + id;
+      item.innerHTML = `<input type="checkbox" id="cb-${id}"${state[id]?' checked':''}>
+        <label for="cb-${id}">${text}${warn}</label>`;
+      item.querySelector('input').addEventListener('change', function() { toggle(id, this.checked); });
+      div.appendChild(item);
+    });
+    panel.appendChild(div);
+  });
+  updateProgress(tab);
+}
+
+function buildSeasonalPanel(panel, intro, prog) {
+  let si = 0;
+  SEASONAL_SECTIONS.forEach(season => {
+    const hdr = document.createElement('div');
+    hdr.className = 'season-header';
+    hdr.innerHTML = `<span class="season-pill">${season.season}</span><div class="season-line"></div>`;
+    panel.appendChild(hdr);
+    season.sections.forEach(sec => {
+      const div = document.createElement('div');
+      div.className = 'section';
+      div.innerHTML = `<div class="section-title"><span class="icon">${sec.icon}</span>${sec.s}</div>`;
+      sec.items.forEach((raw, ii) => {
+        const [text, warnText] = raw.split('||');
+        const id = taskId('seasonal', si, ii);
+        const done = state[id] ? ' done' : '';
+        const warn = warnText ? `<span class="warn">${warnText.replace('⚠ ','')}</span>` : '';
+        const item = document.createElement('div');
+        item.className = 'task' + done;
+        item.id = 'ti-' + id;
+        item.innerHTML = `<input type="checkbox" id="cb-${id}"${state[id]?' checked':''}>
+          <label for="cb-${id}">${text}${warn}</label>`;
+        item.querySelector('input').addEventListener('change', function() { toggle(id, this.checked); });
+        div.appendChild(item);
+      });
+      panel.appendChild(div);
+      si++;
+    });
+  });
+  updateProgress('seasonal');
+}
+
+function countTasks(tab) {
+  let done = 0, total = 0;
+  if (tab === 'seasonal') {
+    let si = 0;
+    SEASONAL_SECTIONS.forEach(season => {
+      season.sections.forEach(sec => {
+        sec.items.forEach((_, ii) => { total++; if (state[taskId(tab,si,ii)]) done++; });
+        si++;
+      });
+    });
+  } else {
+    TASKS[tab].forEach((sec, si) => {
+      sec.items.forEach((_, ii) => { total++; if (state[taskId(tab,si,ii)]) done++; });
+    });
+  }
+  return { done, total };
+}
+
+function updateProgress(tab) {
+  const { done, total } = countTasks(tab);
+  const pct = total ? Math.round(done / total * 100) : 0;
+  const pt = document.getElementById('prog-' + tab);
+  const pf = document.getElementById('fill-' + tab);
+  if (pt) pt.textContent = `${done} of ${total} tasks done`;
+  if (pf) pf.style.width = pct + '%';
+}
+
+function toggle(id, checked) {
+  state[id] = checked;
+  const ti = document.getElementById('ti-' + id);
+  if (ti) ti.classList.toggle('done', checked);
+  updateProgress(id.split('__')[0]);
+  saveState(state);
+}
+
+function clearTab(tab) {
+  document.querySelectorAll(`[id^="ti-${tab}__"]`).forEach(el => {
+    const id = el.id.replace('ti-', '');
+    delete state[id];
+    el.classList.remove('done');
+    const cb = el.querySelector('input');
+    if (cb) cb.checked = false;
+  });
+  updateProgress(tab);
+  saveState(state);
+}
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+}
+
+['daily','weekly','monthly','seasonal'].forEach(buildPanel);
+</script>
+</body>
+</html>
